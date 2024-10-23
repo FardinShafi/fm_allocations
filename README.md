@@ -76,7 +76,7 @@ mongod
 2. Insert seed data:
 
 ```bash
-pip install -r requirements.txt
+python scripts/seed_data.py
 ```
 
 3. Start the FastAPI server:
@@ -98,7 +98,7 @@ The API will be available at `http://localhost:8000`
 1. MongoDB connection test:
 
 ```bash
-python scripts/seed_data.py
+python -m tests.test_mongodb
 ```
 
 2. load testing
@@ -162,11 +162,3 @@ The project uses:
 
 The project can be deployed on any Linux server (like Ubuntu) that has Python 3.7+ and MongoDB installed. You'd need to copy your code to the server, set up a Python virtual environment, install dependencies from requirements.txt, and configure your .env file with the production database settings. To keep the application running continuously, you can use a process manager like Supervisor or systemd. For maintenance, you'll mainly need to monitor the application logs for errors, periodically backup your MongoDB database, and update your code by pulling the latest changes from your repository and restarting the application. Regular system updates and disk space monitoring are also important for server health.
 The whole setup can be done in a short time, and once running, maintenance typically involves just checking logs daily and doing updates when you push new code changes. No special infrastructure or complex setup is needed since this is a relatively straightforward Python/FastAPI application. Docker can also be used to deploy and work on if you are looking for a more standard/structured approached.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request

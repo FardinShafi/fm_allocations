@@ -97,6 +97,9 @@ The API will be available at `http://localhost:8000`
 
 ## Testing
 
+In a seperate terminal, open a virtual environment while the server is server in the first terminal.
+Then run these tests.
+
 1. MongoDB connection test:
 
 ```bash
@@ -163,4 +166,4 @@ The project uses:
 ## Deployement
 
 The project can be deployed on any Linux server (like Ubuntu) that has Python 3.7+ and MongoDB installed. You'd need to copy your code to the server, set up a Python virtual environment, install dependencies from requirements.txt, and configure your .env file with the production database settings. To keep the application running continuously, you can use a process manager like Supervisor or systemd. For maintenance, you'll mainly need to monitor the application logs for errors, periodically backup your MongoDB database, and update your code by pulling the latest changes from your repository and restarting the application. Regular system updates and disk space monitoring are also important for server health.
-The whole setup can be done in a short time, and once running, maintenance typically involves just checking logs daily and doing updates when you push new code changes. No special infrastructure or complex setup is needed since this is a relatively straightforward Python/FastAPI application. Docker can also be used to deploy and work on if you are looking for a more standard/structured approached.
+The whole setup can be done in a short time, and once running, maintenance typically involves just checking logs daily and doing updates when you push new code changes. No special infrastructure or complex setup is needed since this is a relatively straightforward Python/FastAPI application. Docker can also be used to deploy and work on if you are looking for a more standard/structured approach.

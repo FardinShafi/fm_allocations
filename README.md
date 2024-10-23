@@ -97,7 +97,7 @@ The API will be available at `http://localhost:8000`
 
 ## Testing
 
-In a seperate terminal, open a virtual environment while the server is server in the first terminal.
+In a seperate terminal, open a virtual environment while the server is running in the first terminal.
 Then run these tests.
 
 1. MongoDB connection test:

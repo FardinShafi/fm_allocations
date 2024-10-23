@@ -3,13 +3,7 @@ from typing import Optional, List
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from bson import ObjectId
 from app.models.schemas import AllocationCreate, AllocationUpdate,  Allocation
-#
-#
-#
-#REMOVE MULTIPLE ALLOCATION FOR SINGLE EMPLOYEE IN A DAY
-#
-#
-#
+
 class AllocationService:
     def __init__(self, db: AsyncIOMotorDatabase):
         self.db = db
@@ -18,18 +12,26 @@ class AllocationService:
         # Convert the allocation_date to a datetime object
         allocation_date = datetime.combine(allocation.allocation_date, datetime.min.time())
         
-        # Check if vehicle is already allocated for the date
-        existing = await self.db.allocations.find_one({
+        # Check if the vehicle is already allocated for the date
+        existing_vehicle_allocation = await self.db.allocations.find_one({
             "vehicle_id": allocation.vehicle_id,
             "allocation_date": allocation_date  # Use the datetime object here
         })
-        if existing:
+        if existing_vehicle_allocation:
             raise ValueError("Vehicle already allocated for this date")
-        
-        # Check if date is in the future
+
+        # Check if the employee is already allocated a vehicle for the same date
+        existing_employee_allocation = await self.db.allocations.find_one({
+            "employee_id": allocation.employee_id,
+            "allocation_date": allocation_date  # Check if the employee is already allocated for the same date
+        })
+        if existing_employee_allocation:
+            raise ValueError("This employee already has allocated a vehicle for themselves at this date")
+
+        # Check if the allocation date is in the future
         if allocation.allocation_date <= date.today():
             raise ValueError("Allocation date must be in the future")
-        
+
         # Create allocation (store the datetime object)
         allocation_dict = allocation.model_dump()
         allocation_dict["allocation_date"] = allocation_date  # Update the dict with the datetime

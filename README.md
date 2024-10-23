@@ -83,12 +83,12 @@ python scripts/seed_data.py
 
 ```bash
 # Development server
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 OR
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 # Production server
-uvicorn main:app --host 0.0.0.0 --port 8000
+uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
 The API will be available at `http://localhost:8000`

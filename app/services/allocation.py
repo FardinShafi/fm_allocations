@@ -70,23 +70,62 @@ class AllocationService:
         return [Allocation(**allocation) for allocation in allocations]
 
     async def update_allocation(self, allocation_id: str, update_data: AllocationUpdate) -> dict:
-        allocation = await self.get_allocation(allocation_id)  # This should now work
+        # Fetch the current allocation
+        allocation = await self.get_allocation(allocation_id)
         if not allocation:
             raise ValueError("Allocation not found")
 
-        # Check if allocation date has passed
-        if allocation.allocation_date <= date.today():  # Adjust this based on how you access the date
+        # Check if allocation date has passed (existing allocation date)
+        if allocation.allocation_date <= date.today():
             raise ValueError("Cannot update past allocations")
 
         # Prepare the update dictionary
         update_dict = {k: v for k, v in update_data.model_dump().items() if v is not None}
+
+        # If updating allocation_date, vehicle_id, or employee_id, ensure constraints are met
+        if update_data.allocation_date or update_data.vehicle_id or update_data.employee_id:
+            # Convert allocation_date to datetime if present in update
+            new_allocation_date = allocation.allocation_date
+            if update_data.allocation_date:
+                new_allocation_date = datetime.combine(update_data.allocation_date, datetime.min.time())
+
+            # Check if the allocation date is in the future
+            if new_allocation_date.date() <= date.today():
+                raise ValueError("Allocation date must be in the future")
+
+            # If vehicle_id is being updated, check if it's different from the existing one
+            if update_data.vehicle_id and update_data.vehicle_id != allocation.vehicle_id:
+                existing_vehicle_allocation = await self.db.allocations.find_one({
+                    "vehicle_id": update_data.vehicle_id,
+                    "allocation_date": new_allocation_date
+                })
+                if existing_vehicle_allocation and existing_vehicle_allocation["_id"] != allocation_id:
+                    raise ValueError("Vehicle already allocated for this date")
+
+            # If employee_id is being updated, check if it's different from the existing one
+            if update_data.employee_id and update_data.employee_id != allocation.employee_id:
+                existing_employee_allocation = await self.db.allocations.find_one({
+                    "employee_id": update_data.employee_id,
+                    "allocation_date": new_allocation_date
+                })
+                if existing_employee_allocation and existing_employee_allocation["_id"] != allocation_id:
+                    raise ValueError("This employee already has an allocated vehicle for this date")
+
+            # If allocation_date is being updated, add it to update_dict
+            if update_data.allocation_date:
+                update_dict["allocation_date"] = new_allocation_date
+
+        # If there are updates to apply, perform the update in the database
         if update_dict:
             await self.db.allocations.update_one(
                 {"_id": ObjectId(allocation_id)},
                 {"$set": update_dict}
             )
+
+        # Return the updated allocation
+        return await self.get_allocation(allocation_id)
+
         
-        return await self.get_allocation(allocation_id)  # Return updated allocation
 
     async def delete_allocation(self, allocation_id: str):
         allocation = await self.get_allocation(allocation_id)
@@ -98,6 +137,7 @@ class AllocationService:
             raise ValueError("Cannot delete past allocations")
 
         await self.db.allocations.delete_one({"_id": ObjectId(allocation_id)})
+
     async def get_allocation_history(
             self, 
             employee_id: Optional[int] = None,

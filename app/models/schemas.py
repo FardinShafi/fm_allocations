@@ -13,6 +13,9 @@ class AllocationCreate(AllocationBase):
     pass
 
 class AllocationUpdate(BaseModel):
+    employee_id: Optional[int] = None
+    vehicle_id: Optional[int] = None
+    allocation_date: Optional[date] = None
     purpose: Optional[str] = None
 
 class Allocation(AllocationBase):

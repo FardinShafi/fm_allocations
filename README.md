@@ -52,6 +52,8 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
+Or just manually create a file and name it .env
+
 2. Configure your environment variables in `.env`:
 
 ```

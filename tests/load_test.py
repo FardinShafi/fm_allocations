@@ -110,8 +110,8 @@ class VehicleAllocationLoadTest:
                 
                 # Get allocation history with random filters
                 params = {
-                    "employee_id": random.randint(1, 100),
-                    "vehicle_id": random.randint(1, 50),
+                    "employee_id": random.randint(1, 999),
+                    "vehicle_id": random.randint(1, 999),
                     "skip": random.randint(0, 50),
                     "limit": 10
                 }

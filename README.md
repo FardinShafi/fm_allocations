@@ -81,6 +81,8 @@ mongod
 python scripts/seed_data.py
 ```
 
+### This will insert seed data into database, employees, vehicles, drivers will have id from 1-1000 that can be later used for the APIs.
+
 3. Start the FastAPI server:
 
 ```bash

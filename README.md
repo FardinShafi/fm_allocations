@@ -81,7 +81,9 @@ mongod
 python scripts/seed_data.py
 ```
 
-### This will insert seed data into database, employees, vehicles, drivers will have id from 1-1000 that can be later used for the APIs.
+### This will insert seed data into database and create collections called employees, vehicles, drivers that will have id from 1-1000 that can be later used for the APIs.
+
+### Adjust the client variable url in the seed_data.py file with the MONGODB URL to insert data to.
 
 3. Start the FastAPI server:
 
